@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+  "name": "LDR open in background tab",
+  "version": "1.0.4",
+  "description": "",
+  "content_scripts": [
+    {
+      "matches": [
+        "http://reader.livedoor.com/reader/",
+        "http://reader.livedoor.com/public/*"
+      ],
+      "js": [
+        "lib/ldr_open_in_background_tab.user.js"
+      ]
+    }
+  ],
+  "permissions": [
+    "tabs"
+  ]
+}

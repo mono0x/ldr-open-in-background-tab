@@ -1,0 +1,8 @@
+{
+  "name": "LDR open in background tab",
+  "appid": "jngppkmdhennekebnokiahpgcfoaijek",
+  "source_dir": "src",
+  "pem_file": "ldr-open-in-background-tab.pem",
+  "crx_file": "output/ldr-open-in-background-tab.crx",
+  "zip_file": "output/ldr-open-in-background-tab.zip"
+}

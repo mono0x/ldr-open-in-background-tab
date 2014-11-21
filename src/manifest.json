@@ -3,6 +3,11 @@
   "name": "LDR open in background tab",
   "version": "1.0.4",
   "description": "",
+  "background": {
+    "scripts": [
+      "lib/background.js"
+    ]
+  },
   "content_scripts": [
     {
       "matches": [

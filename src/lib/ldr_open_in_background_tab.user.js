@@ -1,13 +1,3 @@
-// ==UserScript==
-// @name        LDR open in background tab
-// @namespace   http://ss-o.net/
-// @include     http://reader.livedoor.com/reader/
-// @include     http://reader.livedoor.com/public/*
-// @include     http://fastladder.com/reader/
-// @include     http://fastladder.com/public/*
-// @version     1.0.4
-// @grant       GM_openInTab
-// ==/UserScript==
 /*
  * Copyright (c) 2014 os0x
  * Copyright (c) 2014 mono
@@ -30,16 +20,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- 
+
+(function() {
+  var port = chrome.extension.connect();
+  var element = document.createElement('div');
+  element.id = 'ldr-open-in-background-tab';
+  element.style.display = 'none';
+  element.addEventListener('postMessage', function() {
+    port.postMessage(JSON.parse(element.innerText));
+  }, false);
+  document.body.appendChild(element);
+})();
+
 (function(window, load){
   if (!load) {
-    if (!this.chrome) {
-      exportFunction(function(url) {
-        setTimeout(function(){
-          GM_openInTab(url);
-        });
-      }, window, {defineAs: 'openInTab'});
-    }
     var fn = '(' + arguments.callee.toString() + ')(this, true);';
     var script = document.createElement('script');
     script.appendChild(document.createTextNode(fn));
@@ -47,18 +41,16 @@
     return;
   }
   var native_open = window.native_open = window.open;
-  window.open = this.chrome ? function(url,name){
+  window.open = function(url,name){
     if (url === void 0) return native_open(url,name);
-    var a = document.createElement('a');
-    a.href = url;
-    if (name) a.target = name;
-    var event = document.createEvent('MouseEvents');
-    event.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 1, null);
-    a.dispatchEvent(event);
-    return true;
-  } : function(url,name){
-    if (url === void 0) return native_open(url,name);
-    window.openInTab(url);
+    var element = document.getElementById('ldr-open-in-background-tab');
+    var event = document.createEvent('Event');
+    event.initEvent('postMessage', true, true);
+    element.innerText = Object.toJSON({
+      message: 'openInTab',
+      url: url
+    });
+    element.dispatchEvent(event);
     return true;
   };
   document.addEventListener('click',function(evt){
@@ -92,4 +84,4 @@
     window.Keybind.add("p", pin);
     window.Keybind.add("v", view_original);
   };
-})(this.unsafeWindow);
+})();

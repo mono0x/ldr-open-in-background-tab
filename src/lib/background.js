@@ -24,7 +24,16 @@ chrome.extension.onConnect.addListener(function(port) {
   port.onMessage.addListener(function(m) {
     switch (m.message) {
       case 'openInTab':
-        chrome.tabs.create({url: m.url, active: false});
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+          var params = {
+            url: m.url,
+            active: false
+          };
+          if (tabs.length >= 1) {
+            params.openerTabId = tabs[0].id;
+          }
+          chrome.tabs.create(params);
+        });
         break;
     }
   });

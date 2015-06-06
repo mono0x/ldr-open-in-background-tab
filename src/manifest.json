@@ -6,7 +6,8 @@
   "background": {
     "scripts": [
       "lib/background.js"
-    ]
+    ],
+    "persistent": false
   },
   "content_scripts": [
     {

@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-chrome.extension.onConnect.addListener(function(port) {
+chrome.runtime.onConnect.addListener(function(port) {
   port.onMessage.addListener(function(m) {
     switch (m.message) {
       case 'openInTab':

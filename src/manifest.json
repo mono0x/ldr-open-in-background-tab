@@ -20,6 +20,12 @@
       ]
     }
   ],
+  "externally_connectable": {
+    "matches": [
+      "http://reader.livedoor.com/reader/",
+      "http://reader.livedoor.com/public/*"
+    ]
+  },
   "permissions": [
   ]
 }

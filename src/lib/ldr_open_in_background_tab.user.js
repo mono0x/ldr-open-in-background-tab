@@ -21,36 +21,19 @@
  * THE SOFTWARE.
  */
 
-(function() {
-  var port = chrome.extension.connect();
-  var element = document.createElement('div');
-  element.id = 'ldr-open-in-background-tab';
-  element.style.display = 'none';
-  element.addEventListener('postMessage', function() {
-    port.postMessage(JSON.parse(element.innerText));
-  }, false);
-  document.body.appendChild(element);
-})();
-
-(function(window, load){
+(function(window, load, id){
   if (!load) {
-    var fn = '(' + arguments.callee.toString() + ')(this, true);';
+    var fn = '(' + arguments.callee.toString() + ')(this, true, "' + chrome.runtime.id + '");';
     var script = document.createElement('script');
     script.appendChild(document.createTextNode(fn));
     document.body.appendChild(script);
     return;
   }
   var native_open = window.native_open = window.open;
+  var port = chrome.runtime.connect(id);
   window.open = function(url,name){
     if (url === void 0) return native_open(url,name);
-    var element = document.getElementById('ldr-open-in-background-tab');
-    var event = document.createEvent('Event');
-    event.initEvent('postMessage', true, true);
-    element.innerText = Object.toJSON({
-      message: 'openInTab',
-      url: url
-    });
-    element.dispatchEvent(event);
+    port.postMessage({ message: 'openInTab', url: url });
     return true;
   };
   document.addEventListener('click',function(evt){

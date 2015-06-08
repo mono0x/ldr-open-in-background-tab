@@ -33,7 +33,14 @@
   var port = chrome.runtime.connect(id);
   window.open = function(url,name){
     if (url === void 0) return native_open(url,name);
-    port.postMessage({ message: 'openInTab', url: url });
+    var message = { message: 'openInTab', url: url };
+    try {
+      port.postMessage(message);
+    }
+    catch (e) {
+      port = chrome.runtime.connect(id);
+      port.postMessage(message);
+    }
     return true;
   };
   document.addEventListener('click',function(evt){
